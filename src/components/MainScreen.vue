@@ -1,7 +1,6 @@
 <template>
-  <div class="container" :class="{ minimized: isSidebarMinimized }">
-    <div class="sidebar" :class="{ minimized: isSidebarMinimized }" id="sidebar">
-      <button @click="toggleSidebar" class="toggle-icon">&laquo;</button>
+  <div class="container">
+    <div class="sidebar" id="sidebar">
       <h2>Pitch Input</h2>
       <div class="input-group">
         <label for="pitch-type">Pitch Type:</label>
@@ -30,62 +29,20 @@
       </div>
       <div class="sequence">Sequence: {{ sequence.join(' - ') }}</div>
 
-      <div class="stat-box-container">
-        <div class="stat-box">
-          <h3>Batting %</h3>
-          <p>{{ battingPercentage }}%</p>
-        </div>
-        <div class="stat-box">
-          <h3>Slugging %</h3>
-          <p>{{ sluggingPercentage }}%</p>
-        </div>
-        <div class="stat-box">
-          <h3>Expected Success %</h3>
-          <p>{{ expectedSuccess }}%</p>
-        </div>
-      </div>
-
       <div class="success-rates-container">
-        <div
-          class="success-box"
-          :class="{
-            highlight: highestSuccessKey === 'FB',
-            lowlight: lowestSuccessKey === 'FB'
-          }"
-        >
+        <div class="success-box" :class="{ highlight: highestSuccessKey === 'FB', lowlight: lowestSuccessKey === 'FB' }">
           <h4>Fastball Success</h4>
           <p>{{ successRates.FB }}%</p>
         </div>
-
-        <div
-          class="success-box"
-          :class="{
-            highlight: highestSuccessKey === 'CB',
-            lowlight: lowestSuccessKey === 'CB'
-          }"
-        >
+        <div class="success-box" :class="{ highlight: highestSuccessKey === 'CB', lowlight: lowestSuccessKey === 'CB' }">
           <h4>Curveball Success</h4>
           <p>{{ successRates.CB }}%</p>
         </div>
-
-        <div
-          class="success-box"
-          :class="{
-            highlight: highestSuccessKey === 'CH',
-            lowlight: lowestSuccessKey === 'CH'
-          }"
-        >
+        <div class="success-box" :class="{ highlight: highestSuccessKey === 'CH', lowlight: lowestSuccessKey === 'CH' }">
           <h4>Changeup Success</h4>
           <p>{{ successRates.CH }}%</p>
         </div>
-
-        <div
-          class="success-box"
-          :class="{
-            highlight: highestSuccessKey === 'SL',
-            lowlight: lowestSuccessKey === 'SL'
-          }"
-        >
+        <div class="success-box" :class="{ highlight: highestSuccessKey === 'SL', lowlight: lowestSuccessKey === 'SL' }">
           <h4>Slider Success</h4>
           <p>{{ successRates.SL }}%</p>
         </div>
@@ -97,11 +54,7 @@
           <p>No previous scenarios to display.</p>
         </div>
         <div v-else class="scenario-list">
-          <div
-            v-for="scenario in savedScenarios"
-            :key="scenario.id"
-            class="scenario-card"
-          >
+          <div v-for="scenario in savedScenarios" :key="scenario.id" class="scenario-card">
             <h3>Scenario</h3>
             <p><strong>Count:</strong> {{ scenario.count }}</p>
             <p><strong>Sequence:</strong> {{ scenario.sequence }}</p>
@@ -124,7 +77,6 @@ export default {
     return {
       pitchType: 'FB',
       pitchResult: '',
-      isSidebarMinimized: false,
       successRates: { FB: '--', CB: '--', CH: '--', SL: '--' },
       battingPercentage: '--',
       sluggingPercentage: '--',
@@ -141,9 +93,6 @@ export default {
     };
   },
   methods: {
-    toggleSidebar() {
-      this.isSidebarMinimized = !this.isSidebarMinimized;
-    },
     async handlePitchAndPredict() {
       const resultInput = this.pitchResult.trim().toLowerCase();
       const validResults = ['strike', 'ball', 'hit', 'out', 'foul'];
@@ -255,9 +204,6 @@ export default {
       this.updatePrediction();
     },
 
-    /*
-    * Firebase Functions
-    */
     async addScenario() {
       const scenario = {
         count: `${this.balls}-${this.strikes}`,
@@ -303,7 +249,7 @@ export default {
       this.sequence = Array.isArray(scenario.sequence)
         ? scenario.sequence
         : scenario.sequence.split('-');
-      this.previousScenario = `Count: ${scenario.count}, Sequence: ${this.sequence.join(' - ')}`;
+      this.previousScenario = `Count: ${scenario.count}`;
       this.updatePrediction();
     },
   },
@@ -337,4 +283,3 @@ export default {
   }
 };
 </script>
-
